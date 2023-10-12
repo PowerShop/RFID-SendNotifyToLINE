@@ -13,10 +13,12 @@
 #define RST_PIN D3
 #define SS_PIN D4
 
-// Define value for LINE Notify
-#define SSID "MM_2G"
-#define PASSWORD "08484840"
-#define LINE_TOKEN "J2RgXWAGi921SG6wUMmpVaeXTnS0zDwJTDRwQ1AFciD"
+// กำหนดค่าสำหรับการเชื่อมต่อ WIFI 
+#define SSID "ชื่อ WIFI"
+#define PASSWORD "รหัสผ่าน"
+
+// กำหนด TOKEN สำหรับการส่งแจ้งเตือนผ่าน LINE
+#define LINE_TOKEN "TOKEN ที่ได้ออกไว้จาก LINE Notify"
 
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 LiquidCrystal_I2C lcd(0x27, 16, 2);
@@ -74,6 +76,10 @@ void loop() {
     rfid_in = rfid_read();
     // lcd.clear();
     Serial.println(">>>> " + rfid_in);
+
+    // ส่งการแจ้งเตือนไปที่ไลน์
+    LINE.notify("มีการสแกน RFID: " + rfid_in);
+
     lcd.setCursor(0, 0);
     lcd.print(rfid_in);
     lcd.setCursor(0, 1);
@@ -91,17 +97,9 @@ void loop() {
     delay(1000);
 
 
-    // delay(3000);
     lcd.clear();
-    delay(500);
-  }
-  // Write my code at here:
-  if (rfid_in == "17 9A DA 29") {
-    LINE.notify("แจ้งเตือน: กิตติศักดิ์ได้ทำการแตะบัตร");
-    // lcd.setCursor(0, 0);
-    // lcd.print("LCD1602 I2c Test");
-    delay(100);
     rfid_in = "";
+    delay(500);
   }
 
   delay(1);
